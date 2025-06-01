@@ -33,10 +33,6 @@ const LayoutPage = () => {
         // await router.invalidate();
     };
 
-    if (isLoading) {
-        return "Loading auth0 information";
-    }
-
     return (
         <>
             <nav>
@@ -48,9 +44,11 @@ const LayoutPage = () => {
                         </li>
                     ))}
                 </ul>
-                <button type="button" onClick={isAuthenticated ? handleLogout : handleLogin}>
-                    {isAuthenticated ? "Logout" : "Login"}
-                </button>
+                {!isLoading && (
+                    <button type="button" onClick={isAuthenticated ? handleLogout : handleLogin}>
+                        {isAuthenticated ? "Logout" : "Login"}
+                    </button>
+                )}
             </nav>
             <main>
                 <Outlet />
