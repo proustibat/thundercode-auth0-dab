@@ -9,7 +9,7 @@ const navigation = [
 ];
 
 const LayoutPage = () => {
-    const { logout, loginWithPopup, isAuthenticated, isLoading } = useAuth0();
+    const { logout, loginWithPopup, isAuthenticated, isLoading, error } = useAuth0();
     const search = useSearch({ from: "/_layout" });
     const navigate = useNavigate();
 
@@ -49,6 +49,7 @@ const LayoutPage = () => {
                         {isAuthenticated ? "Logout" : "Login"}
                     </button>
                 )}
+                {error && <p>Error: {error.name}</p>}
             </nav>
             <main>
                 <Outlet />

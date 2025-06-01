@@ -29,7 +29,7 @@ const ProfilePage = () => {
                         ) : (
                             <>
                                 {claims && <pre>{JSON.stringify(claims, null, 2)}</pre>}
-                                {errorClaims && <div>{errorClaims.message}</div>}
+                                {errorClaims && <div>Error while loading user claims: {errorClaims.message}</div>}
                             </>
                         )}
                     </div>
