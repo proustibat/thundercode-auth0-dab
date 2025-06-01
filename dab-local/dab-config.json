@@ -14,6 +14,13 @@
             }
         }
     },
+    "authentication": {
+        "provider": "StaticWebApps",
+        "jwt": {
+            "audiences": ["https://tab.api"],
+            "issuer": "https://dev-srij3lmte4nvlzbq.us.auth0.com/"
+        }
+    },
     "entities": {
         "projects": {
             "source": "projects",
@@ -22,16 +29,9 @@
             },
             "permissions": [
                 {
-                    "role": "*",
-                    "actions": ["read", "create", "update", "delete"]
-                },
-                {
-                    "role": "anonymous",
-                    "actions": ["read", "create", "update", "delete"]
-                },
-                {
                     "role": "authenticated",
-                    "actions": ["read", "create", "update", "delete"]
+                    "actions": ["read"],
+                    "policy": "@claims.org_id == @item.organization_id"
                 }
             ]
         }
