@@ -1,0 +1,39 @@
+{
+    "$schema": "https://github.com/Azure/data-api-builder/releases/download/v0.10.2/dab.draft.schema.json",
+    "data-source": {
+        "database-type": "mssql",
+        "connection-string": "@env('AZURE_SQL_CONNECTION_STRING')"
+    },
+    "runtime": {
+        "rest": { "enabled": false },
+        "graphql": { "enabled": true, "path": "/graphql" },
+        "host": {
+            "cors": {
+                "origins": ["http://localhost:5173", "https://tab.proustibat.dev", "*"],
+                "allow-credentials": true
+            }
+        }
+    },
+    "entities": {
+        "projects": {
+            "source": "projects",
+            "graphql": {
+                "enabled": true
+            },
+            "permissions": [
+                {
+                    "role": "*",
+                    "actions": ["read", "create", "update", "delete"]
+                },
+                {
+                    "role": "anonymous",
+                    "actions": ["read", "create", "update", "delete"]
+                },
+                {
+                    "role": "authenticated",
+                    "actions": ["read", "create", "update", "delete"]
+                }
+            ]
+        }
+    }
+}

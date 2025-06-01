@@ -1,0 +1,72 @@
+name: Build and deploy DAB to Azure Web App - dab-tab-net
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js (to enable npm if needed)
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.x'
+
+      - name: Download and extract DAB (self-contained binary)
+        working-directory: dab-backend
+        run: |
+          curl -L https://github.com/Azure/data-api-builder/releases/download/v1.4.35/dab_net8.0_linux-x64-1.4.35.zip -o dab.zip
+          unzip -o dab.zip
+
+      - name: Make start.sh executable
+        run: chmod +x dab-backend/start.sh
+
+      - name: Zip artifact for deployment
+        run: cd dab-backend && zip -r ../release.zip .
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: dab-app
+          path: release.zip
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'Production'
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: dab-app
+
+      - name: Unzip artifact for deployment
+        run: unzip release.zip
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'dab-tab-net'
+          slot-name: 'Production'
+          package: release.zip
