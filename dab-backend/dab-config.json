@@ -29,7 +29,7 @@
             },
             "permissions": [
                 {
-                    "role": "authenticated",
+                    "role": "anonymous",
                     "actions": ["read"],
                     "policy": "@claims.org_id == @item.organization_id"
                 }
