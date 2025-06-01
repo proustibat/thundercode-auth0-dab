@@ -49,7 +49,7 @@ const LayoutPage = () => {
                         {isAuthenticated ? "Logout" : "Login"}
                     </button>
                 )}
-                {error && <p>Error: {error.name}</p>}
+                {error && <p>Error: {error.message}</p>}
             </nav>
             <main>
                 <Outlet />

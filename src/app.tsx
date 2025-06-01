@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { RouterProvider } from "@tanstack/react-router";
 import { useState } from "react";
+import { ApolloWrapper } from "./providers/ApolloWrapper.tsx";
 import { appRouter } from "./router";
 
 const domain = import.meta.env.VITE_AUTH0_DOMAIN;
@@ -12,7 +13,11 @@ const organization = import.meta.env.VITE_AUTH0_ORGANIZATION_ID;
 
 function InnerApp() {
     const auth = useAuth0();
-    return <RouterProvider router={appRouter} context={{ auth }} />;
+    return (
+        <ApolloWrapper>
+            <RouterProvider router={appRouter} context={{ auth }} />
+        </ApolloWrapper>
+    );
 }
 
 const App = () => {
