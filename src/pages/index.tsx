@@ -1,5 +1,11 @@
+import PageTitle from "../components/pageTitle.tsx";
+
 const IndexPage = () => {
-    return <h1>Home page</h1>;
+    return (
+        <div className="py-5">
+            <PageTitle title="Home page" subtitle="This is a public page without any restricted content" />
+        </div>
+    );
 };
 
 export default IndexPage;

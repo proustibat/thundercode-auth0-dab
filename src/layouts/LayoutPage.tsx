@@ -1,15 +1,10 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Link, Outlet, useNavigate, useSearch } from "@tanstack/react-router";
+import { Outlet, useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect } from "react";
-
-const navigation = [
-    { name: "Home", to: "/" },
-    { name: "Profile", to: "/profile" },
-    { name: "Projects", to: "/projects" },
-];
+import Menu from "../components/menu.tsx";
 
 const LayoutPage = () => {
-    const { logout, loginWithPopup, isAuthenticated, isLoading, error } = useAuth0();
+    const { isAuthenticated, error } = useAuth0();
     const search = useSearch({ from: "/_layout" });
     const navigate = useNavigate();
 
@@ -19,39 +14,12 @@ const LayoutPage = () => {
         }
     }, [isAuthenticated, search, navigate]);
 
-    const handleLogout = async () => {
-        await logout();
-        // await router.invalidate();
-    };
-
-    const handleLogin = async () => {
-        await loginWithPopup({
-            authorizationParams: {
-                redirect_uri: window.location.href,
-            },
-        });
-        // await router.invalidate();
-    };
-
     return (
         <>
-            <nav>
-                {search.redirect && <p>You tried to see a protected page, please login</p>}
-                <ul>
-                    {navigation.map((item) => (
-                        <li key={item.name}>
-                            <Link to={item.to}>{item.name}</Link>
-                        </li>
-                    ))}
-                </ul>
-                {!isLoading && (
-                    <button type="button" onClick={isAuthenticated ? handleLogout : handleLogin}>
-                        {isAuthenticated ? "Logout" : "Login"}
-                    </button>
-                )}
-                {error && <p>Error: {error.message}</p>}
-            </nav>
-            <main>
+            <Menu />
+            <main className="mx-auto max-w-5xl pb-5">
+                {search.redirect && <p>You tried to see a protected page, please login!</p>}
+                {error && <p>Auth0 error: {error.message}</p>}
                 <Outlet />
             </main>
         </>
