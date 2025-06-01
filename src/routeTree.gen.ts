@@ -8,38 +8,56 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
+
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as LayoutImport } from './routes/_layout'
-import { Route as LayoutIndexImport } from './routes/_layout.index'
-import { Route as LayoutProjectsImport } from './routes/_layout.projects'
-import { Route as LayoutProfileImport } from './routes/_layout.profile'
+import { Route as LayoutRouteImport } from './routes/_layout/route'
+import { Route as LayoutpublicIndexImport } from './routes/_layout/(public)/index'
+import { Route as LayoutpublicProfileImport } from './routes/_layout/(public)/profile'
+import { Route as LayoutprotectedAuthRouteImport } from './routes/_layout/(protected)/_auth/route'
+import { Route as LayoutprotectedAuthProjectsImport } from './routes/_layout/(protected)/_auth/projects'
+
+// Create Virtual Routes
+
+const LayoutprotectedImport = createFileRoute('/_layout/(protected)')()
 
 // Create/Update Routes
 
-const LayoutRoute = LayoutImport.update({
+const LayoutRouteRoute = LayoutRouteImport.update({
   id: '/_layout',
   getParentRoute: () => rootRoute,
 } as any)
 
-const LayoutIndexRoute = LayoutIndexImport.update({
-  id: '/',
+const LayoutprotectedRoute = LayoutprotectedImport.update({
+  id: '/(protected)',
+  getParentRoute: () => LayoutRouteRoute,
+} as any)
+
+const LayoutpublicIndexRoute = LayoutpublicIndexImport.update({
+  id: '/(public)/',
   path: '/',
-  getParentRoute: () => LayoutRoute,
+  getParentRoute: () => LayoutRouteRoute,
 } as any)
 
-const LayoutProjectsRoute = LayoutProjectsImport.update({
-  id: '/projects',
-  path: '/projects',
-  getParentRoute: () => LayoutRoute,
-} as any)
-
-const LayoutProfileRoute = LayoutProfileImport.update({
-  id: '/profile',
+const LayoutpublicProfileRoute = LayoutpublicProfileImport.update({
+  id: '/(public)/profile',
   path: '/profile',
-  getParentRoute: () => LayoutRoute,
+  getParentRoute: () => LayoutRouteRoute,
 } as any)
+
+const LayoutprotectedAuthRouteRoute = LayoutprotectedAuthRouteImport.update({
+  id: '/_auth',
+  getParentRoute: () => LayoutprotectedRoute,
+} as any)
+
+const LayoutprotectedAuthProjectsRoute =
+  LayoutprotectedAuthProjectsImport.update({
+    id: '/projects',
+    path: '/projects',
+    getParentRoute: () => LayoutprotectedAuthRouteRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -49,91 +67,136 @@ declare module '@tanstack/react-router' {
       id: '/_layout'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof LayoutImport
+      preLoaderRoute: typeof LayoutRouteImport
       parentRoute: typeof rootRoute
     }
-    '/_layout/profile': {
-      id: '/_layout/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof LayoutProfileImport
-      parentRoute: typeof LayoutImport
-    }
-    '/_layout/projects': {
-      id: '/_layout/projects'
-      path: '/projects'
-      fullPath: '/projects'
-      preLoaderRoute: typeof LayoutProjectsImport
-      parentRoute: typeof LayoutImport
-    }
-    '/_layout/': {
-      id: '/_layout/'
+    '/_layout/(protected)': {
+      id: '/_layout/(protected)'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof LayoutIndexImport
-      parentRoute: typeof LayoutImport
+      preLoaderRoute: typeof LayoutprotectedImport
+      parentRoute: typeof LayoutRouteImport
+    }
+    '/_layout/(protected)/_auth': {
+      id: '/_layout/(protected)/_auth'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof LayoutprotectedAuthRouteImport
+      parentRoute: typeof LayoutprotectedRoute
+    }
+    '/_layout/(public)/profile': {
+      id: '/_layout/(public)/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof LayoutpublicProfileImport
+      parentRoute: typeof LayoutRouteImport
+    }
+    '/_layout/(public)/': {
+      id: '/_layout/(public)/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof LayoutpublicIndexImport
+      parentRoute: typeof LayoutRouteImport
+    }
+    '/_layout/(protected)/_auth/projects': {
+      id: '/_layout/(protected)/_auth/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof LayoutprotectedAuthProjectsImport
+      parentRoute: typeof LayoutprotectedAuthRouteImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface LayoutRouteChildren {
-  LayoutProfileRoute: typeof LayoutProfileRoute
-  LayoutProjectsRoute: typeof LayoutProjectsRoute
-  LayoutIndexRoute: typeof LayoutIndexRoute
+interface LayoutprotectedAuthRouteRouteChildren {
+  LayoutprotectedAuthProjectsRoute: typeof LayoutprotectedAuthProjectsRoute
 }
 
-const LayoutRouteChildren: LayoutRouteChildren = {
-  LayoutProfileRoute: LayoutProfileRoute,
-  LayoutProjectsRoute: LayoutProjectsRoute,
-  LayoutIndexRoute: LayoutIndexRoute,
+const LayoutprotectedAuthRouteRouteChildren: LayoutprotectedAuthRouteRouteChildren =
+  {
+    LayoutprotectedAuthProjectsRoute: LayoutprotectedAuthProjectsRoute,
+  }
+
+const LayoutprotectedAuthRouteRouteWithChildren =
+  LayoutprotectedAuthRouteRoute._addFileChildren(
+    LayoutprotectedAuthRouteRouteChildren,
+  )
+
+interface LayoutprotectedRouteChildren {
+  LayoutprotectedAuthRouteRoute: typeof LayoutprotectedAuthRouteRouteWithChildren
 }
 
-const LayoutRouteWithChildren =
-  LayoutRoute._addFileChildren(LayoutRouteChildren)
+const LayoutprotectedRouteChildren: LayoutprotectedRouteChildren = {
+  LayoutprotectedAuthRouteRoute: LayoutprotectedAuthRouteRouteWithChildren,
+}
+
+const LayoutprotectedRouteWithChildren = LayoutprotectedRoute._addFileChildren(
+  LayoutprotectedRouteChildren,
+)
+
+interface LayoutRouteRouteChildren {
+  LayoutprotectedRoute: typeof LayoutprotectedRouteWithChildren
+  LayoutpublicProfileRoute: typeof LayoutpublicProfileRoute
+  LayoutpublicIndexRoute: typeof LayoutpublicIndexRoute
+}
+
+const LayoutRouteRouteChildren: LayoutRouteRouteChildren = {
+  LayoutprotectedRoute: LayoutprotectedRouteWithChildren,
+  LayoutpublicProfileRoute: LayoutpublicProfileRoute,
+  LayoutpublicIndexRoute: LayoutpublicIndexRoute,
+}
+
+const LayoutRouteRouteWithChildren = LayoutRouteRoute._addFileChildren(
+  LayoutRouteRouteChildren,
+)
 
 export interface FileRoutesByFullPath {
-  '': typeof LayoutRouteWithChildren
-  '/profile': typeof LayoutProfileRoute
-  '/projects': typeof LayoutProjectsRoute
-  '/': typeof LayoutIndexRoute
+  '': typeof LayoutRouteRouteWithChildren
+  '/': typeof LayoutpublicIndexRoute
+  '/profile': typeof LayoutpublicProfileRoute
+  '/projects': typeof LayoutprotectedAuthProjectsRoute
 }
 
 export interface FileRoutesByTo {
-  '/profile': typeof LayoutProfileRoute
-  '/projects': typeof LayoutProjectsRoute
-  '/': typeof LayoutIndexRoute
+  '/': typeof LayoutpublicIndexRoute
+  '/profile': typeof LayoutpublicProfileRoute
+  '/projects': typeof LayoutprotectedAuthProjectsRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/_layout': typeof LayoutRouteWithChildren
-  '/_layout/profile': typeof LayoutProfileRoute
-  '/_layout/projects': typeof LayoutProjectsRoute
-  '/_layout/': typeof LayoutIndexRoute
+  '/_layout': typeof LayoutRouteRouteWithChildren
+  '/_layout/(protected)': typeof LayoutprotectedRouteWithChildren
+  '/_layout/(protected)/_auth': typeof LayoutprotectedAuthRouteRouteWithChildren
+  '/_layout/(public)/profile': typeof LayoutpublicProfileRoute
+  '/_layout/(public)/': typeof LayoutpublicIndexRoute
+  '/_layout/(protected)/_auth/projects': typeof LayoutprotectedAuthProjectsRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/profile' | '/projects' | '/'
+  fullPaths: '' | '/' | '/profile' | '/projects'
   fileRoutesByTo: FileRoutesByTo
-  to: '/profile' | '/projects' | '/'
+  to: '/' | '/profile' | '/projects'
   id:
     | '__root__'
     | '/_layout'
-    | '/_layout/profile'
-    | '/_layout/projects'
-    | '/_layout/'
+    | '/_layout/(protected)'
+    | '/_layout/(protected)/_auth'
+    | '/_layout/(public)/profile'
+    | '/_layout/(public)/'
+    | '/_layout/(protected)/_auth/projects'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  LayoutRoute: typeof LayoutRouteWithChildren
+  LayoutRouteRoute: typeof LayoutRouteRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  LayoutRoute: LayoutRouteWithChildren,
+  LayoutRouteRoute: LayoutRouteRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -150,24 +213,38 @@ export const routeTree = rootRoute
       ]
     },
     "/_layout": {
-      "filePath": "_layout.tsx",
+      "filePath": "_layout/route.tsx",
       "children": [
-        "/_layout/profile",
-        "/_layout/projects",
-        "/_layout/"
+        "/_layout/(protected)",
+        "/_layout/(public)/profile",
+        "/_layout/(public)/"
       ]
     },
-    "/_layout/profile": {
-      "filePath": "_layout.profile.tsx",
+    "/_layout/(protected)": {
+      "filePath": "_layout/(protected)/_auth",
+      "parent": "/_layout",
+      "children": [
+        "/_layout/(protected)/_auth"
+      ]
+    },
+    "/_layout/(protected)/_auth": {
+      "filePath": "_layout/(protected)/_auth/route.tsx",
+      "parent": "/_layout/(protected)",
+      "children": [
+        "/_layout/(protected)/_auth/projects"
+      ]
+    },
+    "/_layout/(public)/profile": {
+      "filePath": "_layout/(public)/profile.tsx",
       "parent": "/_layout"
     },
-    "/_layout/projects": {
-      "filePath": "_layout.projects.tsx",
+    "/_layout/(public)/": {
+      "filePath": "_layout/(public)/index.tsx",
       "parent": "/_layout"
     },
-    "/_layout/": {
-      "filePath": "_layout.index.tsx",
-      "parent": "/_layout"
+    "/_layout/(protected)/_auth/projects": {
+      "filePath": "_layout/(protected)/_auth/projects.tsx",
+      "parent": "/_layout/(protected)/_auth"
     }
   }
 }

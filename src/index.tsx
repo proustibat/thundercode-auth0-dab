@@ -3,15 +3,11 @@ import { createRoot } from "react-dom/client";
 import App from "./app";
 
 async function renderRoot() {
-    const RootComponent = (
+    createRoot(document.getElementById("root") as HTMLElement).render(
         <StrictMode>
             <App />
         </StrictMode>
     );
-
-    const rootElement = document.getElementById("root") as HTMLElement;
-    const root = createRoot(rootElement);
-    root.render(RootComponent);
 }
 
 renderRoot();

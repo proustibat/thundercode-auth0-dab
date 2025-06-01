@@ -1,4 +1,4 @@
-import { type AppState, Auth0Provider } from "@auth0/auth0-react";
+import { type AppState, Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { RouterProvider } from "@tanstack/react-router";
@@ -8,6 +8,12 @@ import { appRouter } from "./router";
 const domain = import.meta.env.VITE_AUTH0_DOMAIN;
 const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID;
 const audience = import.meta.env.VITE_AUTH0_AUDIENCE;
+const organization = import.meta.env.VITE_AUTH0_ORGANIZATION_ID;
+
+function InnerApp() {
+    const auth = useAuth0();
+    return <RouterProvider router={appRouter} context={{ auth }} />;
+}
 
 const App = () => {
     const [queryClient] = useState(() => new QueryClient());
@@ -18,14 +24,14 @@ const App = () => {
                 domain={domain}
                 clientId={clientId}
                 authorizationParams={{
-                    redirect_uri: window.location.origin,
                     audience,
+                    organization,
                 }}
                 onRedirectCallback={(appState: AppState | undefined) => {
                     appRouter.history.push(appState?.returnTo || window.location.pathname);
                 }}
             >
-                <RouterProvider router={appRouter} />
+                <InnerApp />
             </Auth0Provider>
             <ReactQueryDevtools />
         </QueryClientProvider>

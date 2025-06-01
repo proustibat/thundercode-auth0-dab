@@ -1,15 +1,20 @@
-import { Outlet, createRootRoute } from "@tanstack/react-router";
+import type { Auth0ContextInterface } from "@auth0/auth0-react";
+import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import { lazy } from "react";
 
 const TanStackRouterDevtools = import.meta.env.PROD
     ? () => null
     : lazy(() =>
-          import("@tanstack/router-devtools").then((res) => ({
+          import("@tanstack/react-router-devtools").then((res) => ({
               default: res.TanStackRouterDevtools,
           }))
       );
 
-export const Route = createRootRoute({
+interface MyRouteContext {
+    auth?: Auth0ContextInterface;
+}
+
+export const Route = createRootRouteWithContext<MyRouteContext>()({
     component: () => (
         <>
             <Outlet />
