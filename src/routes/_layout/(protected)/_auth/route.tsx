@@ -1,5 +1,5 @@
 // @todo have a look at https://developer.auth0.com/resources/guides/spa/react/basic-authentication#add-route-guards-to-react
-// to do it in a different way
+// to do it in a different way?
 
 import { createFileRoute, redirect } from "@tanstack/react-router";
 

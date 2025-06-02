@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import EmptyProjects from "../components/emptyProjects.tsx";
 import PageTitle from "../components/pageTitle.tsx";
+import ProjectItem from "../components/projectItem.tsx";
 import { GET_PROJECTS } from "../graphql/projects.ts";
 import type { GetProjectsData, GetProjectsVars } from "../graphql/types.ts";
 import { useAuthClaims } from "../hooks/useAuthClaims.ts";
@@ -28,31 +29,12 @@ const ProjectsPage = () => {
                     {!loading &&
                         data &&
                         data.projects.items.map((item, index) => (
-                            <div
+                            <ProjectItem
                                 key={item.id}
-                                className={`${index !== 0 ? "pt-5" : ""} pb-5 w-full ${index !== data.projects.items.length - 1 ? "border-b border-gray-300" : ""}`}
-                            >
-                                <h3 className="text-base font-semibold ">{item.name}</h3>
-                                <p className="mt-2 max-w-4xl text-sm">{item.description}</p>
-                                <p className="mt-2 max-w-4xl text-sm">
-                                    {JSON.parse(item.tech).length &&
-                                        JSON.parse(item.tech).map((t: string) => (
-                                            <span
-                                                key={t}
-                                                className="inline-flex items-center gap-x-1.5 rounded-md px-2 py-1 text-xs font-medium ring-1 ring-slate-600 ring-inset m-0.5"
-                                            >
-                                                <svg
-                                                    viewBox="0 0 6 6"
-                                                    aria-hidden="true"
-                                                    className="size-1.5 dark:fill-slate-300 fill-sky-900"
-                                                >
-                                                    <circle r={3} cx={3} cy={3} />
-                                                </svg>
-                                                {t}
-                                            </span>
-                                        ))}
-                                </p>
-                            </div>
+                                isFirst={index === 0}
+                                isLast={index === data.projects.items.length - 1}
+                                {...item}
+                            />
                         ))}
                 </section>
             )}
