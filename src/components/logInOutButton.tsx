@@ -4,14 +4,14 @@ const LoginOutButton = () => {
     const { logout, loginWithPopup, isAuthenticated, isLoading } = useAuth0();
 
     const handleLogout = async () => {
-        await logout();
+        await logout({ logoutParams: { returnTo: window.location.origin } });
         // await router.invalidate();
     };
 
     const handleLogin = async () => {
         await loginWithPopup({
             authorizationParams: {
-                redirect_uri: window.location.href,
+                redirect_uri: window.location.origin,
             },
         });
         // await router.invalidate();
