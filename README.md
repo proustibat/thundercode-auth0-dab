@@ -31,8 +31,6 @@ This project is a secure React frontend that integrates with Auth0 for authentic
 - Used for authentication and user session management.
 - Custom claim `org_id` is included in the JWT and consumed on the client.
 
-[//]: # (- The app redirects users to Auth0 when authentication is required or when users click the login button.)
-
 ### Azure Data API Builder (DAB)
 
 - Exposes a GraphQL API based on a SQL Server schema.
@@ -51,7 +49,6 @@ This project is a secure React frontend that integrates with Auth0 for authentic
 - Claims extracted securely via `useAuth0` and validated.
 - Role/organization-specific data access enforced via query filtering.
 - Sensitive routes (`/projects`) are protected by both route guards and frontend checks.
-[//]: # (- Errors are captured globally with an `ErrorBoundary` &#40;via `react-error-boundary`&#41;.)
 - Apollo's `ErrorLink` intercepts GraphQL errors for centralized handling.
 
 
@@ -130,7 +127,6 @@ The project follows clear separation of concerns, reusable custom hooks, protect
 | **Apollo Client with `authLink`**                  | ✅         | Tokens are injected into GraphQL requests correctly.                    |
 | **GraphQL queries filtered by organization**       | ✅         | Data is filtered using `organization_id` in the query.                  |
 | **Error handling with Apollo**                     | ✅         | `ErrorLink` is set up to catch authentication and GraphQL errors.       |
-| **Global error boundaries**                        | ✅         | `react-error-boundary` is properly used in the root layout.             |
 | **Secure communication channels**                  | ✅         | JWTs, query-level data filtering, and no sensitive data leaks.          |
 | **Unit tests**                                     | ✅         | Tests written with Vitest and React Testing Library, covering key logic. |
 | **GitHub usage and CI/CD setup**                   | ✅         | DAB deployment is automated with GitHub Actions, and the repo is structured. |
