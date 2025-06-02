@@ -3,7 +3,6 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link } from "@tanstack/react-router";
 import classNames from "classnames";
 import LogInOutButton from "./logInOutButton.tsx";
-// import { LogInOutButton } from "./LogInOutButton.tsx";
 
 export const navigation = [
     { name: "Home (public)", to: "/" },
@@ -30,7 +29,7 @@ const linksClassNamesMobile = {
 const Menu = () => {
     return (
         <Disclosure as="nav" className="bg-[#0047BB]">
-            <div className="mx-auto max-w-5xl">
+            <div className="mx-auto max-w-5xl px-2 sm:px-3 md:px-4 lg:px-0">
                 <div className="relative flex h-16 items-center justify-between">
                     <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                         {/* Mobile menu button*/}
@@ -73,7 +72,7 @@ const Menu = () => {
             </div>
 
             <DisclosurePanel className="sm:hidden">
-                <div className="space-y-1 px-2 pt-2 pb-3">
+                <div className="space-y-1 pb-3">
                     {navigation.map((item) => (
                         <Link
                             key={item.name}

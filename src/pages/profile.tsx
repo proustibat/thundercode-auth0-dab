@@ -1,10 +1,18 @@
 import { useAuth0 } from "@auth0/auth0-react";
+import { useEffect } from "react";
+import { toast } from "sonner";
 import PageTitle from "../components/pageTitle.tsx";
 import { useAuthClaims } from "../hooks/useAuthClaims.ts";
 
 const ProfilePage = () => {
-    const { user, isAuthenticated, isLoading: isLoadingAuth0, error: errorAuth0 } = useAuth0();
-    const { claims, error: errorClaims, isLoading: isLoadingClaims } = useAuthClaims();
+    const { user, isAuthenticated, isLoading: isLoadingAuth0 } = useAuth0();
+    const { claims, error, isLoading: isLoadingClaims } = useAuthClaims();
+
+    useEffect(() => {
+        if (error) {
+            toast.error(`Error while loading claims: ${error.message}`);
+        }
+    }, [error]);
 
     return (
         <>
@@ -18,7 +26,6 @@ const ProfilePage = () => {
             ) : (
                 <div>
                     <section className="p-10 dark:shadow-slate-950 shadow-slate-300 container mx-auto bg-slate-200 dark:bg-slate-800 sm:rounded-xl mt-1 lg:mt-5 dark:text-slate-300 text-slate-950 shadow-sm">
-                        {errorAuth0 && <div>Error while loading user information: {errorAuth0.message}</div>}
                         {isLoadingAuth0 ? (
                             <p>Loading user information...</p>
                         ) : (
@@ -49,7 +56,6 @@ const ProfilePage = () => {
                         )}
                     </section>
                     <section className="dark:shadow-slate-950 shadow-slate-300 container mx-auto bg-slate-200 dark:bg-slate-800 sm:rounded-xl p-10 lg:mt-5 mt-3 dark:text-slate-300 text-slate-950 shadow-sm">
-                        {errorClaims && <div>Error while loading user claims: {errorClaims.message}</div>}
                         <p className="mt-4 mb-1 text-sm sm:text-lg">Here are your decoded claims from token:</p>
                         {isLoadingClaims ? (
                             <div>Loading claims...</div>

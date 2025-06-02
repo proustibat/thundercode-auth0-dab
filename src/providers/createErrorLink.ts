@@ -1,6 +1,6 @@
 import { onError } from "@apollo/client/link/error";
 
-export const createErrorLink = (loginWithRedirect: () => void) =>
+export const createErrorLink = (displayToast: (message: string) => void) =>
     onError(({ graphQLErrors, networkError }) => {
         console.group("🔥 Apollo Error Link");
         console.log("GraphQL errors:", graphQLErrors);
@@ -13,13 +13,12 @@ export const createErrorLink = (loginWithRedirect: () => void) =>
 
                 console.warn(`[GraphQL error]: ${message} (code: ${code})`);
 
-                if (code === "FORBIDDEN" || code === "AUTH_NOT_AUTHENTICATED") {
-                    loginWithRedirect();
-                }
+                displayToast(`[GraphQL error]: ${message} (code: ${code})`);
             }
         }
 
         if (networkError) {
             console.error(`[Network error]: ${networkError}`);
+            displayToast(`[Network error]: ${networkError}`);
         }
     });
