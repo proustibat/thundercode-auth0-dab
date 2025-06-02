@@ -1,7 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { renderHook, waitFor } from "@testing-library/react";
 import { jwtDecode } from "jwt-decode";
-import { type Mock, vi } from "vitest";
+import { type Mock, beforeEach, vi } from "vitest";
 import { useAuthClaims } from "../useAuthClaims.ts";
 
 vi.mock("@auth0/auth0-react");
@@ -12,9 +12,9 @@ describe("useAuthClaims", () => {
     const mockJwtDecode = vi.fn();
 
     beforeEach(() => {
-        vi.clearAllMocks();
         (useAuth0 as Mock).mockReturnValue({
             getAccessTokenSilently: mockGetAccessTokenSilently,
+            isAuthenticated: true,
         });
         (jwtDecode as Mock).mockImplementation(mockJwtDecode);
     });
@@ -34,6 +34,7 @@ describe("useAuthClaims", () => {
         await waitFor(() => {
             expect(result.current.claims).toEqual(mockClaims);
             expect(result.current.error).toBeNull();
+            expect(result.current.isLoading).toBe(false);
         });
     });
 
@@ -50,6 +51,25 @@ describe("useAuthClaims", () => {
         await waitFor(() => {
             expect(result.current.claims).toBeNull();
             expect(result.current.error).toEqual(mockError);
+            expect(result.current.isLoading).toBe(false);
+        });
+    });
+
+    it("should return null claims and no error when user is not authenticated", async () => {
+        // GIVEN
+        (useAuth0 as Mock).mockReturnValue({
+            getAccessTokenSilently: mockGetAccessTokenSilently,
+            isAuthenticated: false,
+        });
+
+        // WHEN
+        const { result } = renderHook(() => useAuthClaims());
+
+        // THEN
+        await waitFor(() => {
+            expect(result.current.claims).toBeNull();
+            expect(result.current.error).toBeNull();
+            expect(result.current.isLoading).toBe(false);
         });
     });
 });

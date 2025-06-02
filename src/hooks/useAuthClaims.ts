@@ -30,8 +30,12 @@ export const useAuthClaims = () => {
     }, [getAccessTokenSilently, isAuthenticated]);
 
     useEffect(() => {
+        if (!isAuthenticated) {
+            setIsLoading(false);
+            return;
+        }
         extractClaims();
-    }, [extractClaims]);
+    }, [extractClaims, isAuthenticated]);
 
     return { claims, error, isLoading };
 };

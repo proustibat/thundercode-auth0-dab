@@ -1,7 +1,15 @@
 import { useAuth0 } from "@auth0/auth0-react";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 const LoginOutButton = () => {
     const { logout, loginWithPopup, isAuthenticated, isLoading } = useAuth0();
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            toast.success("Log in successfully.");
+        }
+    }, [isAuthenticated]);
 
     const handleLogout = async () => {
         await logout({ logoutParams: { returnTo: window.location.origin } });
